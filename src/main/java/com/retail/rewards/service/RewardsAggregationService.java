@@ -17,12 +17,17 @@ import java.util.TreeMap;
 public class RewardsAggregationService {
 
     private final RewardPointsCalculator calculator;
+    private final RewardsPeriodValidator periodValidator;
 
-    public RewardsAggregationService(RewardPointsCalculator calculator) {
+    public RewardsAggregationService(
+            RewardPointsCalculator calculator,
+            RewardsPeriodValidator periodValidator) {
         this.calculator = calculator;
+        this.periodValidator = periodValidator;
     }
 
     public RewardsSummaryResponse summarize(List<PurchaseTransaction> transactions) {
+        periodValidator.assertAllWithinProgramPeriod(transactions);
         record Row(String customerId, YearMonth month, int points) {}
 
         List<Row> rows = new ArrayList<>();

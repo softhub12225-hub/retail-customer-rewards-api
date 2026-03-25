@@ -1,6 +1,6 @@
 # Customer Rewards API
 
-Spring Boot REST service that calculates retail loyalty points per transaction and aggregates **points by customer and calendar month**, plus **lifetime total** over the supplied records.
+Spring Boot REST service that calculates retail loyalty points per transaction and aggregates **points by customer and calendar month**, plus **total over the program**, for a **single three-calendar-month reward period** (configurable, enforced for all requests).
 
 ## Rules (per transaction)
 
@@ -28,12 +28,23 @@ $env:JAVA_HOME = "C:\Path\to\jdk-17"
 .\mvnw.cmd spring-boot:bootRun
 ```
 
+## Reward program period
+
+All transactions must fall within the inclusive dates below (defaults match the demo dataset). The configured range **must span exactly three calendar months** or the application will not start.
+
+```properties
+rewards.period.start-date=2024-01-01
+rewards.period.end-date=2024-03-31
+```
+
+`POST /api/rewards/calculate` returns **400** if any `purchaseDate` is outside this window.
+
 ## API
 
 | Method | Path | Description |
 |--------|------|----------------|
-| `GET` | `/api/rewards/demo` | Returns rewards for the built-in three-month demo dataset |
-| `POST` | `/api/rewards/calculate` | Accepts a list of transactions and returns the same summary shape |
+| `GET` | `/api/rewards/demo` | Returns rewards for the built-in demo dataset (inside the configured period) |
+| `POST` | `/api/rewards/calculate` | Accepts transactions **within the reward period**; returns the same summary shape |
 
 ### POST body
 

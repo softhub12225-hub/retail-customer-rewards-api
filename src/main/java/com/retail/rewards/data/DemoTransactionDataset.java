@@ -7,7 +7,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Three-month window (Jan–Mar 2024) with multiple customers illustrating each earning band.
+ * Sample transactions within the configured reward period ({@code rewards.period.*}).
+ * Demonstrates each earning band, multiple customers, and same-month aggregation.
  */
 public final class DemoTransactionDataset {
 

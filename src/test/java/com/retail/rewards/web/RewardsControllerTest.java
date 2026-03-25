@@ -50,4 +50,15 @@ class RewardsControllerTest {
                 .andExpect(jsonPath("$.customers[0].customerId").value("x"))
                 .andExpect(jsonPath("$.customers[0].totalPoints").value(90));
     }
+
+    @Test
+    void calculateRejectsPurchaseOutsideRewardPeriod() throws Exception {
+        var body = new CalculateRewardsRequest(List.of(
+                new TransactionRequest("x", new BigDecimal("50"), LocalDate.of(2024, 4, 1))
+        ));
+        mockMvc.perform(post("/api/rewards/calculate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isBadRequest());
+    }
 }
